@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <a class="btn btn-success" href="/employee/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                新增员工
+            </a>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                员工列表
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                    <th>薪水</th>
+                    <th>入职时间</th>
+                    <th>性别</th>
+                    <th>所属部门</th>
+                    <th>操作</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in employee_list %}
+                    <tr>
+                        <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.pwd }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.salary }}</td>
+                        <td>{{ item.create_time|date:"Y-m-d" }}</td>
+                        <td>{{ item.get_gender_display }}</td>
+                        <td>{{ item.depart.title }}</td>
+                        <td>
+                            <a class="btn btn-primary btn-xs" href="/employee/edit/?nid={{ item.id }}">编辑</a>
+                            <a class="btn btn-danger btn-xs" href="/employee/delete/?nid={{ item.id }}">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}
