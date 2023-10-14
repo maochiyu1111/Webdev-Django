@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <style>
+
+        body {
+            margin: 0;
+            background: url("https://images.freeimages.com/clg/istock/previews/9586/95861185-abstract-light-blue-polygonal-geometric-background-made-of-triangles.jpg") fixed no-repeat;
+            background-size: cover;
+        }
+        .account {
+            width: 400px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            box-shadow: 5px 5px 20px #aaa;
+
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+            padding: 20px 40px;
+
+        }
+
+        .account h2 {
+            margin-top: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #3c3c3c;
+        }
+    </style>
+</head>
+<body>
+<div class="account">
+    <h2>注 册</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for item in form %}
+            <div class="form-group">
+                <label>{{ item.label }}</label>
+                {{ item }}
+                <span style="color: red;">{{ item.errors.0 }}</span>
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="注 册" class="btn btn-primary">
+    </form>
+</div>
+
+</body>
+</html>
