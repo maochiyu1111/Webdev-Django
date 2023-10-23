@@ -17,8 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from SecondHand.views import account, item, admin
+from django.urls import path, re_path
+from django.views.static import serve
+from django.conf import settings
 
 urlpatterns = [
+
+    # 图片上传
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
+
     # 登录
     path('login/', account.login),
     path('logout/', account.logout),
@@ -26,10 +33,14 @@ urlpatterns = [
     path('register/', account.register),
 
     # 物品展示
-    path('item/list/', item.show),
-    # path('item/add/', item.add),
+    path('item/list/', item.show_list),
+    path('item/add/', item.add),
+    path('item/detail/', item.show_detail),
 
     # 管理员视角
-    path('admin/list/', admin.show)
+    path('admin/item/manage/', admin.show_item),
+    path('admin/item/detail/', admin.check_item),
+    path('admin/item/delete/', admin.delete_item),
+
 
 ]

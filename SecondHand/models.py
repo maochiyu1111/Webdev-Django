@@ -20,11 +20,16 @@ class UserInfo(models.Model):
     )
     statustype = models.SmallIntegerField(verbose_name="用户状态", choices=status_choices, default=2)
 
+    def __str__(self):
+        return self.username
+
 
 class ItemInfo(models.Model):
     """ 二手物品表"""
+
+    seller = models.ForeignKey(verbose_name="卖家ID", to="UserInfo", to_field="id", on_delete=models.CASCADE)
     item_name = models.CharField(verbose_name="物品名称", max_length=32)
-    item_category = models.ForeignKey(to="ItemCategory", to_field="id", on_delete=models.CASCADE)
+    item_category = models.ForeignKey(verbose_name="物品种类", to="ItemCategory", to_field="id", on_delete=models.CASCADE)
     purchase_time = models.DateField(verbose_name="购买时间")
 
     condition_choices = (
@@ -42,7 +47,14 @@ class ItemInfo(models.Model):
 
     publish_time = models.DateField(verbose_name='发布时间', auto_now_add=True)
 
+    item_img = models.FileField(verbose_name="物品图片", max_length=1024, upload_to='item/')
+
+    item_description = models.TextField(verbose_name='物品描述', max_length=512, blank=True)
+
 
 class ItemCategory(models.Model):
     """ 物品种类"""
     category_name = models.CharField(verbose_name="种类名称", max_length=32)
+
+    def __str__(self):
+        return self.category_name

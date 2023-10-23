@@ -1,0 +1,179 @@
+{% extends 'layout_user.html' %}
+{% load static %}
+{% block css %}
+
+    <style>
+        .item-description {
+            width: 250px;
+            color: #888888;
+        }
+
+        p {
+            margin: 0 0 10px;
+        }
+
+        .detail-title {
+            padding: 10px 0 0;
+            margin: 20px 0;
+            font-size: 22px;
+            color: #6e7099;
+        }
+
+        .description-title {
+            padding: 10px 0 0;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #6e7099;
+        }
+
+        .hover-effect {
+            border: 1px solid rgb(229, 229, 229);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .hover-effect:hover {
+            border-color: #cccccc;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+            -webkit-transform: translate3d(0, -2px, 0);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row center-block" style="margin-top: 10px; width: 80%">
+            <div class="col-md-9">
+                <h1 class="detail-title ">{{ item_object.item_name }}</h1>
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <div class="center-block" style="width: 60%;">
+                            <img src="/media/{{ item_object.item_img }}" class="img-responsive"
+                                 alt="{{ item_object.item_name }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6 " style="margin-top: 30px; padding-left: 40px;">
+                        <p>物品种类：{{ item_object.item_category }}</p>
+                        <p>卖家：{{ item_object.seller }}</p>
+                        <p>价格：{{ item_object.price }}￥</p>
+                        <p>购买时间：{{ item_object.purchase_time }}</p>
+                        <p>新旧程度：{{ item_object.get_item_condition_display }}</p>
+                        <p>交易位置：{{ item_object.location }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 panel panel-default " style="margin-top: 50px;">
+                <div class="panel-body center-block">
+                    <p class="btn btn-primary" id="btnAddOder">
+                        <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+                        立即下单
+                    </p>
+                    <p></p>
+                    <p class="btn btn-warning">
+                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                        加入购物车
+                    </p>
+                    <p></p>
+                    <p class="btn btn-info">
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                        加入收藏夹
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="center-block" style="width: 80%; margin-top: 30px; padding-left: 15px;">
+            <h1 class="description-title ">物品描述</h1>
+            <p>{{ item_object.item_description }}</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">订单</h4>
+                </div>
+                <div class="modal-body">
+                    <img class="img-responsive center-block" alt="付款码" src="{% static 'img/打钱.png' %}" style="width: 60%">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">已支付</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+            bindBtnAddEvent();
+            {#bindBtnSaveEvent();#}
+        })
+
+        function bindBtnAddEvent() {
+            $("#btnAddOder").click(function () {
+
+                // 点击新建按钮，显示对话框。
+                $('#myModal').modal('show');
+            });
+        }
+
+        {#function bindBtnSaveEvent() {#}
+        {#    $("#btnSave").click(function () {#}
+        {##}
+        {#        // 清除错误信息#}
+        {#        $(".error-msg").empty();#}
+        {#        doAdd();#}
+        {##}
+        {#    });#}
+        {#}#}
+
+        {#function doAdd() {#}
+        {#    // 向后台发送请求（添加的Ajax请求）#}
+        {#    var formData = new FormData($("#formAdd")[0]);#}
+        {##}
+        {#    $.ajax({#}
+        {#        url: "/item/add/",#}
+        {#        type: "post",#}
+        {#        data: formData,#}
+        {#        processData: false,#}
+        {#        contentType: false,#}
+        {#        dataType: "JSON",#}
+        {#        success: function (res) {#}
+        {#            if (res.status) {#}
+        {##}
+        {#                alert("创建成功");#}
+        {##}
+        {#                // 清空表单  $("#formAdd")是jQuery对象 -> $("#formAdd")[0] DOM对象#}
+                        {#$("#formAdd")[0].reset();#}
+        {##}
+        {#                // 关闭对话框#}
+        {#                $('#myModal').modal('hide');#}
+        {##}
+        {#                // 刷新页面#}
+        {#                location.reload();#}
+        {##}
+        {#            } else {#}
+        {#                // 把错误信息显示在对话框中。#}
+        {#                $.each(res.error, function (name, errorList) {#}
+        {#                    $("#id_" + name).next().text(errorList[0]);#}
+        {#                })#}
+        {#            }#}
+        {#        }#}
+        {#    })#}
+        {#}#}
+
+
+    </script>
+{% endblock %}

@@ -81,7 +81,7 @@ def login(request):
     form = LoginForm(data=request.POST)
     if form.is_valid():
         # 去数据库校验用户名和密码是否正确
-        # user_object = models.Admin.objects.filter(username=xxx, password=xxx).first()
+
         user_object = models.UserInfo.objects.filter(**form.cleaned_data).first()
         if not user_object:
             form.add_error("password", "用户名或密码错误")
@@ -96,7 +96,7 @@ def login(request):
         if user_object.usertype == 1:
             return redirect("/item/list/")
 
-        return redirect("/admin/list/")
+        return redirect("/admin/item/manage/")
 
     return render(request, 'login.html', {'form': form})
 
@@ -108,6 +108,11 @@ def register(request):
 
     form = RegisterModelForm(data=request.POST)
     if form.is_valid():
+        user_object = models.UserInfo.objects.filter(username=form.instance.username).first()
+        if user_object:
+            form.add_error("username", "用户名已存在")
+            return render(request, 'register.html', {'form': form})
+
         form.save()
         return redirect('/login/')
 
