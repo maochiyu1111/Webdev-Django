@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>香遇 PerfumeEncore</title>
+    <link rel="icon" href="{% static 'img/logofont-removebg.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<div>
+    <div class="jumbotron row " style="margin-top: 90px;">
+        <div class="container text-center col-md-7" style="margin-top: 40px;">
+            <h1>欢迎来到香遇</h1>
+            <h2>PerfumeEncore</h2>
+            <p>一个没人用的香氛转让网站</p>
+            <p><a class="btn btn-primary btn-lg" href="/register/" role="button">点击注册</a></p>
+            <p><a class="btn btn-primary btn-lg" href="/login/" role="button">点击登录</a></p>
+        </div>
+
+        <div class="col-md-5 ">
+            <div style="width: 80%;" >
+                <img class="img-responsive" src="{% static 'img/logo-removebg.png' %}" alt="logo">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

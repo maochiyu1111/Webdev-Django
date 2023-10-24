@@ -23,6 +23,9 @@ from django.conf import settings
 
 urlpatterns = [
 
+    # 主页
+    path('index/', account.index),
+
     # 图片上传
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
 

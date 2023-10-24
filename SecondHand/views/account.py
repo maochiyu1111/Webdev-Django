@@ -71,6 +71,10 @@ class RegisterModelForm(BootStrapModelForm):
         return confirm
 
 
+def index(request):
+    return render(request, 'index.html')
+
+
 def login(request):
     """ 登录 """
     if request.method == "GET":
