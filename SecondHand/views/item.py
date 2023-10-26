@@ -2,18 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from SecondHand.utils.bootstrap import BootStrapModelForm
 from SecondHand import models
 from SecondHand.utils.pagination import Pagination
-
-
-class ItemModelForm(BootStrapModelForm):
-    bootstrap_exclude_fields = ['item_img']
-
-    class Meta:
-        model = models.ItemInfo
-        fields = ['item_name', 'item_category', 'purchase_time', 'item_condition', 'price', 'location',
-                  'item_img', 'item_description']
+from SecondHand.utils.form import ItemModelForm
 
 
 def show_list(request):
@@ -38,7 +29,7 @@ def show_list(request):
 
 @csrf_exempt
 def add(request):
-    """ 新建订单（Ajax请求）"""
+    """ 新建物品（Ajax请求）"""
     form = ItemModelForm(data=request.POST, files=request.FILES)
     if form.is_valid():
         # 固定设置卖家

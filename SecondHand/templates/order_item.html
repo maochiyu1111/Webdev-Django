@@ -26,16 +26,6 @@
             color: #6e7099;
         }
 
-        .hover-effect {
-            border: 1px solid rgb(229, 229, 229);
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .hover-effect:hover {
-            border-color: #cccccc;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-            -webkit-transform: translate3d(0, -2px, 0);
-        }
     </style>
 {% endblock %}
 
@@ -43,7 +33,7 @@
     <div class="container">
 
         <div class="row center-block" style="margin-top: 10px; width: 80%">
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <h1 class="detail-title ">{{ item_object.item_name }}</h1>
                 <div class="row">
                     <div class="col-md-6 ">
@@ -53,9 +43,6 @@
                         </div>
                     </div>
                     <div class="col-md-6 " style="margin-top: 30px; padding-left: 40px;">
-                        <p id="item-id" hidden>{{ item_object.id }}</p>
-                        <p id="item-price" hidden>{{ item_object.price }}</p>
-                        <p id="item-name" hidden>{{ item_object.item_name }}</p>
                         <p>物品种类：{{ item_object.item_category }}</p>
                         <p>卖家：{{ item_object.seller }}</p>
                         <p>价格：{{ item_object.price }}￥</p>
@@ -63,25 +50,6 @@
                         <p>新旧程度：{{ item_object.get_item_condition_display }}</p>
                         <p>交易位置：{{ item_object.location }}</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 panel panel-default " style="margin-top: 50px;">
-                <div class="panel-body center-block">
-                    <p class="btn btn-primary" id="btnAddOrder">
-                        <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
-                        立即下单
-                    </p>
-                    <p></p>
-                    <a href="#" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
-                        加入购物车
-                    </a>
-                    <p></p>
-                    <a href="#" class="btn btn-info">
-                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                        加入收藏夹
-                    </a>
                 </div>
             </div>
 
@@ -96,26 +64,6 @@
     </div>
 
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">订单-模拟支付</h4>
-                </div>
-                <div class="modal-body">
-                    <img class="img-responsive center-block" alt="付款码" src="{% static 'img/打钱.png' %}"
-                         style="width: 60%">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
-                    <button id="btnSave" type="button" class="btn btn-primary">已支付</button>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block js %}

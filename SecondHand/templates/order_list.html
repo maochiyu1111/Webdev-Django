@@ -1,0 +1,310 @@
+{% extends 'layout_user.html' %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                订单列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>物品名</th>
+                    <th>交易价格（￥）</th>
+                    <th>交易时间</th>
+                    <th>订单状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in order_list %}
+                    {% if obj.order_complaint_status == 1 %}
+                        <tr>
+                            <td>{{ obj.item_name }}</td>
+                            <td>{{ obj.amount }}</td>
+                            <td>{{ obj.order_time }}</td>
+                            <td>{{ obj.get_order_status_display }}</td>
+                            <td>
+                                <a class="btn btn-primary btn-xs" href="/order/item/?itemid={{ obj.item_id }}">查看物品</a>
+                                <input orderid="{{ obj.id }}" ordername="{{ obj.item_name }}" type="button"
+                                       class="btn btn-warning btn-xs btn-check btnComplaintShow" value="投诉订单">
+                                <input orderid="{{ obj.id }}" class="btn btn-danger btn-xs btn-delete" type="button"
+                                       value="取消订单">
+                            </td>
+                        </tr>
+                    {% elif obj.order_complaint_status == 3%}
+                        <tr>
+                            <td>{{ obj.item_name }}</td>
+                            <td>{{ obj.amount }}</td>
+                            <td>{{ obj.order_time }}</td>
+                            <td>{{ obj.get_order_status_display }}</td>
+                            <td>
+                                <a class="btn btn-primary btn-xs" href="/order/item/?itemid={{ obj.item_id }}">查看物品</a>
+                                <input orderid="{{ obj.id }}" ordername="{{ obj.item_name }}" type="button"
+                                       class="btn btn-success btn-xs btn-check btnOpinionShow" value="查看回复">
+                                <input orderid="{{ obj.id }}" class="btn btn-danger btn-xs btn-delete" type="button"
+                                       value="取消订单">
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ obj.item_name }}</td>
+                            <td>{{ obj.amount }}</td>
+                            <td>{{ obj.order_time }}</td>
+                            <td>{{ obj.get_order_status_display }}</td>
+                            <td>
+                                <a class="btn btn-primary btn-xs" href="/order/item/?itemid={{ obj.item_id }}">查看物品</a>
+                                <input orderid="{{ obj.id }}" class="btn btn-danger btn-xs btn-delete" type="button"
+                                       value="取消订单">
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- 投诉订单（对话框） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">投诉订单</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formAdd">
+                        <div class="clearfix">
+                            <div class="col-xs-12">
+                                <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                    <label>订单号</label>
+                                    <input id="order_id_input" class="form-control" type="text" placeholder="" readonly name="order_id">
+                                    <span class="error-msg" style="color: red;position: absolute;"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                    <label>物品名</label>
+                                    <input id="order_name_input" class="form-control" type="text" placeholder="" readonly>
+                                    <span class="error-msg" style="color: red;position: absolute;"></span>
+                                </div>
+                            </div>
+
+                            {% for field in complaint_form %}
+                                <div class="col-xs-12">
+                                    <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnComplaint" type="button" class="btn btn-primary">确 认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--查看投诉回复框-->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">投诉订单</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formReply">
+                        <div class="clearfix">
+                            {% for field in opinion_form %}
+                                <div class="col-xs-12">
+                                    <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 删除（对话框） -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h4>是否确定取消？</h4>
+                <p style="margin: 10px 0;"> 取消订单后，你的本次交易将无效。</p>
+                <p style="text-align: right;">
+                    <button id="btnConfirmDelete" type="button" class="btn btn-danger">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript">
+        var ORDER_ID;
+        var ORDER_ITEM_NAME;
+
+        $(function () {
+            bindBtnDeleteEvent();
+            bindBtnConfirmDeleteEvent();
+            bindBtnComplaintEvent();
+            bindBtnComplaintSendEvent();
+            bindBtnCheckReplyEvent();
+        })
+
+        function bindBtnDeleteEvent() {
+            $(".btn-delete").click(function () {
+                // 显示删除对话框
+                $("#deleteModal").modal('show');
+
+                // 获取当前行的ID并赋值给全部变量。
+                ORDER_ID = $(this).attr("orderid");
+            });
+        }
+
+        function bindBtnConfirmDeleteEvent() {
+            $("#btnConfirmDelete").click(function () {
+                $.ajax({
+                    url: "/order/delete/",
+                    type: "GET",
+                    data: {
+                        orderid: ORDER_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            location.reload();
+                        } else {
+                            // 删除失败
+                            alert(res.error);
+                        }
+                    }
+                })
+            });
+        }
+
+        function bindBtnComplaintEvent() {
+            $(".btnComplaintShow").click(function () {
+                // 清空对话框中的数据
+                $("#formAdd")[0].reset();
+
+                ORDER_ID = $(this).attr("orderid");
+                ORDER_ITEM_NAME = $(this).attr("ordername");
+
+                $("#order_id_input").attr("placeholder", ORDER_ID);
+                $("#order_name_input").attr("placeholder", ORDER_ITEM_NAME);
+
+                $("#order_id_input").val(ORDER_ID)
+
+
+                // 点击新建按钮，显示对话框。
+                $('#myModal').modal('show');
+            });
+        }
+        
+        function bindBtnCheckReplyEvent() {
+            $(".btnOpinionShow").click(function () {
+                // 清空对话框中的数据
+                $("#formReply")[0].reset();
+
+                ORDER_ID = $(this).attr("orderid");
+
+                $.ajax({
+                    url: "/order/check/reply/",
+                    type: "get",
+                    data: {
+                        order_id: ORDER_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            // 将数据赋值到对话框中的标签中。
+                            $.each(res.data, function (name, value) {
+                                $("#id_" + name).val(value);
+                            })
+
+                            // 点击编辑，显示对话框
+                            $('#myModal2').modal('show');
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
+
+            });
+        }
+
+        function bindBtnComplaintSendEvent() {
+            $("#btnComplaint").click(function () {
+
+                // 清除错误信息
+                $(".error-msg").empty();
+                doComplaint();
+
+            });
+        }
+
+        function doComplaint() {
+            // 向后台发送请求（添加的Ajax请求）
+            {#var formData = new FormData($("#formAdd")[0]);#}
+            var formData = $("#formAdd").serialize()
+
+            $.ajax({
+                url: "/order/complaint/",
+                type: "post",
+                data: formData,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+
+                        // 关闭对话框
+                        $('#myModal').modal('hide');
+
+                        // 刷新页面
+                        {#location.reload();#}
+
+                    } else {
+                        // 把错误信息显示在对话框中。
+                        $.each(res.error, function (name, errorList) {
+                            $("#id_" + name).next().text(errorList[0]);
+                        })
+                    }
+                }
+            })
+        }
+
+    </script>
+{% endblock %}
+

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from SecondHand.views import account, item, admin
+from SecondHand.views import account, item, admin, order
 from django.urls import path, re_path
 from django.views.static import serve
 from django.conf import settings
@@ -40,10 +40,22 @@ urlpatterns = [
     path('item/add/', item.add),
     path('item/detail/', item.show_detail),
 
+    # 订单部分
+    path('order/add/', order.add),
+    path('order/list/', order.show_list),
+    path('order/item/', order.check_item),
+    path('order/delete/', order.delete),
+    path('order/complaint/', order.add_complaint),
+    path('order/check/reply/', order.check_reply),
+
     # 管理员视角
     path('admin/item/manage/', admin.show_item),
     path('admin/item/detail/', admin.check_item),
     path('admin/item/delete/', admin.delete_item),
+    path('admin/complaint/list/', admin.show_complaint),
+    path('admin/complaint/reply/', admin.reply_complaint),
+
+
 
 
 ]

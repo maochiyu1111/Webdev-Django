@@ -29,7 +29,8 @@ class ItemInfo(models.Model):
 
     seller = models.ForeignKey(verbose_name="卖家ID", to="UserInfo", to_field="id", on_delete=models.CASCADE)
     item_name = models.CharField(verbose_name="物品名称", max_length=32)
-    item_category = models.ForeignKey(verbose_name="物品种类", to="ItemCategory", to_field="id", on_delete=models.CASCADE)
+    item_category = models.ForeignKey(verbose_name="物品种类", to="ItemCategory", to_field="id",
+                                      on_delete=models.CASCADE)
     purchase_time = models.DateField(verbose_name="购买时间")
 
     condition_choices = (
@@ -58,3 +59,80 @@ class ItemCategory(models.Model):
 
     def __str__(self):
         return self.category_name
+
+
+class OrderInfo(models.Model):
+    # item_id in database
+    item = models.ForeignKey(verbose_name="物品id", to="ItemInfo", to_field="id", on_delete=models.CASCADE)
+
+    item_name = models.CharField(verbose_name="物品名称", max_length=32)
+
+    buyer = models.ForeignKey(verbose_name="买方id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
+
+    amount = models.DecimalField(verbose_name='交易价格', max_digits=10, decimal_places=2)
+
+    order_time = models.DateField(verbose_name='支付时间', auto_now_add=True)
+
+    order_status_choices = (
+        (1, "未完成"),
+        (2, "已完成"),
+        (3, "已取消"),
+    )
+
+    order_status = models.SmallIntegerField(verbose_name="订单状态", choices=order_status_choices)
+
+    order_complaint_choices = (
+        (1, "未发起投诉"),
+        (2, "已投诉，未回复"),
+        (3, "已投诉，且回复"),
+    )
+
+    order_complaint_status = models.SmallIntegerField(verbose_name="订单投诉状态", choices=order_complaint_choices,
+                                                      default=1)
+
+
+class FavoriteInfo(models.Model):
+    user = models.ForeignKey(verbose_name="用户id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
+
+    item = models.ForeignKey(verbose_name="物品id", to="ItemInfo", to_field="id", on_delete=models.CASCADE)
+
+    favorite_time = models.DateField(verbose_name='收藏时间', auto_now_add=True)
+
+
+class ShoppingCartInfo(models.Model):
+    user = models.ForeignKey(verbose_name="用户id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
+
+    item = models.ForeignKey(verbose_name="物品id", to="ItemInfo", to_field="id", on_delete=models.CASCADE)
+
+    add_time = models.DateField(verbose_name='加购时间', auto_now_add=True)
+
+
+class ComplaintInfo(models.Model):
+    user = models.ForeignKey(verbose_name="用户id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
+
+    order = models.OneToOneField(verbose_name="订单id", to="OrderInfo", to_field="id",
+                                 on_delete=models.CASCADE, primary_key=True)
+
+    category_choices = (
+        (1, "对卖家"),
+        (2, "对物品"),
+    )
+
+    complaint_category = models.SmallIntegerField(verbose_name="投诉类别", choices=category_choices)
+
+    complaint_time = models.DateField(verbose_name='投诉时间', auto_now_add=True)
+
+    complaint_reason = models.TextField(verbose_name='投诉理由', max_length=512)
+
+
+
+class HandlingOpinionInfo(models.Model):
+    order = models.OneToOneField(verbose_name="订单id", to="OrderInfo", to_field="id",
+                                 on_delete=models.CASCADE, primary_key=True)
+
+    manager = models.ForeignKey(verbose_name="管理员", to="UserInfo", to_field="id", on_delete=models.CASCADE)
+
+    opinion = models.TextField(verbose_name='处理意见', max_length=512)
+
+    handling_time = models.DateField(verbose_name='处理时间', auto_now_add=True)
+

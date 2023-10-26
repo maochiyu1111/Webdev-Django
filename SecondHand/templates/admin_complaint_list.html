@@ -1,0 +1,208 @@
+{% extends 'layout_admin.html' %}
+
+{#{% block css %}#}
+{#<style>#}
+{#    .truncate-cell {#}
+{#        width: 100px; /* 设置单元格宽度 */#}
+{#        white-space: nowrap; /* 防止文本换行 */#}
+{#        overflow: hidden; /* 隐藏超出部分的文本 */#}
+{#        text-overflow: ellipsis; /* 显示省略号 */#}
+{#    }#}
+{#</style>#}
+{#{% endblock %}#}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px" class="clearfix">
+
+            <div style="float: right;width: 300px;">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="输入订单id"
+                               value="{{ search_data }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                      </span>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                投诉列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>投诉订单ID</th>
+                    <th>投诉方</th>
+                    <th>投诉类别</th>
+                    <th>投诉理由</th>
+                    <th>投诉时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in queryset %}
+                    <tr orderid="{{ obj.order_id }}">
+                        <th>{{ obj.order_id }}</th>
+                        <td>{{ obj.user }}</td>
+                        <td>{{ obj.get_complaint_category_display }}</td>
+                        <td class="truncate-cell">{{ obj.complaint_reason }}</td>
+                        <td>{{ obj.complaint_time }}</td>
+                        <td>
+                            <input orderid="{{ obj.order_id }}" type="button" class="btn btn-primary btn-xs btn-reply"
+                                   value="回复">
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </div>
+
+    <!-- 新建 物品（对话框） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">查看</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formAdd">
+                        <input id="order_id_input" hidden name="order_id">
+                        <div class="clearfix">
+                            {% for field in form %}
+                                <div class="col-xs-12">
+                                    <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                        <label readonly="">{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">意见回复</label>
+                                    <textarea class="form-control" name="reply" rows="4" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnReplyConfirm" type="button" class="btn btn-primary">回 复</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+
+        var REPLY_ID;
+
+        $(function () {
+            bindBtnReplyEvent();
+            truncateEvent();
+            bindBtnConfirmEvent();
+
+        })
+
+        function truncateEvent() {
+            $(".truncate-cell").each(function () {
+                var maxLength = 20;
+                var text = $(this).text();
+                if (text.length > maxLength) {
+                    $(this).text(text.substring(0, maxLength) + "...");
+                }
+            });
+        }
+
+        function bindBtnReplyEvent() {
+            $(".btn-reply").click(function () {
+                // 清空对话框中的数据
+                $("#formAdd")[0].reset();
+                REPLY_ID = $(this).attr("orderid");
+
+                $("#order_id_input").val(REPLY_ID)
+
+
+                // 发送Ajax去后端获取当前行的相关数据  /order/detail/?itemid=123
+                $.ajax({
+                    url: "/admin/complaint/reply/",
+                    type: "get",
+                    data: {
+                        order_id: REPLY_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            // 将数据赋值到对话框中的标签中。
+                            $.each(res.data, function (name, value) {
+                                $("#id_" + name).val(value);
+                            })
+
+                            // 点击编辑，显示对话框
+                            $('#myModal').modal('show');
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnConfirmEvent() {
+            $("#btnReplyConfirm").click(function () {
+
+                var formData = $("#formAdd").serialize();
+
+                $.ajax({
+                    url: "/admin/complaint/reply/",
+                    type: "post",
+                    data: formData,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+
+                            // 关闭对话框
+                            $('#myModal').modal('hide');
+
+                        } else {
+                            // 把错误信息显示在对话框中。
+                            $.each(res.error, function (name, errorList) {
+                                $("#id_" + name).next().text(errorList[0]);
+                            })
+                        }
+                    }
+                });
+            });
+
+        }
+
+    </script>
+{% endblock %}
