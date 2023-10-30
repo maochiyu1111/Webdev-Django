@@ -17,13 +17,17 @@ def login(request):
     form = LoginForm(data=request.POST)
     if form.is_valid():
         # 去数据库校验用户名和密码是否正确
-
         user_object = models.UserInfo.objects.filter(**form.cleaned_data).first()
         if not user_object:
             form.add_error("password", "用户名或密码错误")
             return render(request, 'login.html', {'form': form})
 
-        # 用户名和密码正确
+        # 再查看是否是被冻结的账户
+        if user_object.statustype == 3:
+            form.add_error("username", "您的账号已被冻结")
+            return render(request, 'login.html', {'form': form})
+
+        # 用户名和密码正确且经过验证
         # 网站生成随机字符串; 写到用户浏览器的cookie中；在写入到session中；
         request.session["info"] = {'id': user_object.id, 'name': user_object.username, 'type': user_object.usertype}
         # session可以保存7天

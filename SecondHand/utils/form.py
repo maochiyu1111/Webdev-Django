@@ -98,3 +98,4 @@ class OpinionModelForm(BootStrapModelForm):
     class Meta:
         model = models.HandlingOpinionInfo
         fields = ['manager', 'opinion']
+

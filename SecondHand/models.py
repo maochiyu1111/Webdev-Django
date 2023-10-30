@@ -92,6 +92,8 @@ class OrderInfo(models.Model):
 
 
 class FavoriteInfo(models.Model):
+    favorite_id = models.AutoField(primary_key=True)
+
     user = models.ForeignKey(verbose_name="用户id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
 
     item = models.ForeignKey(verbose_name="物品id", to="ItemInfo", to_field="id", on_delete=models.CASCADE)
@@ -100,6 +102,8 @@ class FavoriteInfo(models.Model):
 
 
 class ShoppingCartInfo(models.Model):
+    shoppingcart_id = models.AutoField(primary_key=True)
+
     user = models.ForeignKey(verbose_name="用户id", to="UserInfo", to_field="id", on_delete=models.CASCADE)
 
     item = models.ForeignKey(verbose_name="物品id", to="ItemInfo", to_field="id", on_delete=models.CASCADE)
@@ -125,7 +129,6 @@ class ComplaintInfo(models.Model):
     complaint_reason = models.TextField(verbose_name='投诉理由', max_length=512)
 
 
-
 class HandlingOpinionInfo(models.Model):
     order = models.OneToOneField(verbose_name="订单id", to="OrderInfo", to_field="id",
                                  on_delete=models.CASCADE, primary_key=True)
@@ -135,4 +138,3 @@ class HandlingOpinionInfo(models.Model):
     opinion = models.TextField(verbose_name='处理意见', max_length=512)
 
     handling_time = models.DateField(verbose_name='处理时间', auto_now_add=True)
-

@@ -33,7 +33,6 @@ def show_list(request):
 
 
 def check_item(request):
-    # TODO:收到get传回来的itemid,改一下detail页面展示订单对应的物品
     item_id = request.GET.get('itemid')
     item_object = models.ItemInfo.objects.filter(id=item_id).first()
     return render(request, 'order_item.html', {"item_object": item_object})

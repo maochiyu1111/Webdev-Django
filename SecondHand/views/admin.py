@@ -99,3 +99,46 @@ def reply_complaint(request):
         order_obj.save()
 
         return JsonResponse({"status": True})
+
+
+def show_account(request):
+    data_dict = {}
+    search_data = request.GET.get('q', "")
+    if search_data:
+        data_dict["id__contains"] = search_data
+
+    # 只能编辑用户的账号
+    data_dict["usertype"] = 1
+
+    # 根据搜索条件去数据库获取
+    queryset = models.UserInfo.objects.filter(**data_dict)
+    # 分页
+    page_object = Pagination(request, queryset, 10)
+    context = {
+        'queryset': page_object.page_queryset,
+        'page_string': page_object.html(),
+        "search_data": search_data
+    }
+    return render(request, 'admin_account_list.html', context)
+
+
+def freeze_account(request):
+    user_id = request.GET.get('userid')
+
+    # 修改user表中的statustype一项，变成冻结
+    user_obj = models.UserInfo.objects.filter(id=user_id).first()
+    user_obj.statustype = 3
+    user_obj.save()
+
+    return JsonResponse({"status": True})
+
+
+def recover_account(request):
+    user_id = request.GET.get('userid')
+
+    # 修改user表中的statustype一项，变成冻结
+    user_obj = models.UserInfo.objects.filter(id=user_id).first()
+    user_obj.statustype = 2
+    user_obj.save()
+
+    return JsonResponse({"status": True})

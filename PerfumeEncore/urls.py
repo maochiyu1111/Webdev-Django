@@ -54,8 +54,9 @@ urlpatterns = [
     path('admin/item/delete/', admin.delete_item),
     path('admin/complaint/list/', admin.show_complaint),
     path('admin/complaint/reply/', admin.reply_complaint),
-
-
+    path('admin/account/manage/', admin.show_account),
+    path('admin/account/freeze/', admin.freeze_account),
+    path('admin/account/recover/', admin.recover_account),
 
 
 ]

@@ -1,0 +1,165 @@
+{% extends 'layout_admin.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px" class="clearfix">
+
+            <div style="float: right;width: 300px;">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="请输入用户id"
+                               value="{{ search_data }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                      </span>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                账号列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>用户ID</th>
+                    <th>用户名</th>
+                    <th>创建时间</th>
+                    <th>用户状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in queryset %}
+                    {% if obj.statustype == 2 %}
+                        <tr userid="{{ obj.id }}">
+                            <th>{{ obj.id }}</th>
+                            <td>{{ obj.username }}</td>
+                            <td>{{ obj.create_time }}</td>
+                            <td>{{ obj.get_statustype_display }}</td>
+                            <td>
+                                <input userid="{{ obj.id }}" type="button" class="btn btn-info btn-xs btn-freeze"
+                                       value="冻结">
+                            </td>
+                        </tr>
+                    {% elif obj.statustype == 3 %}
+                        <tr userid="{{ obj.id }}">
+                            <th>{{ obj.id }}</th>
+                            <td>{{ obj.username }}</td>
+                            <td>{{ obj.create_time }}</td>
+                            <td>{{ obj.get_statustype_display }}</td>
+                            <td>
+                                <input userid="{{ obj.id }}" class="btn btn-danger btn-xs btn-recover" type="button"
+                                       value="恢复">
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </div>
+
+    <!-- 冻结（对话框） -->
+    <div class="modal fade" id="freezeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h4>是否确定冻结？</h4>
+                <p style="margin: 10px 0;"> 冻结后，该账户将无法登录。</p>
+                <p style="text-align: right;">
+                    <button id="btnConfirmFreeze" type="button" class="btn btn-danger">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        var FREEZE_ID;
+        var RECOVER_ID;
+
+        $(function () {
+            bindBtnFreezeEvent();
+            bindBtnConfirmFreezeEvent();
+            bindBtnRecoverEvent();
+        })
+
+        function bindBtnFreezeEvent() {
+            $(".btn-freeze").click(function () {
+                // alert("点击了删除");
+                // 显示删除对话框
+                $("#freezeModal").modal('show');
+
+                // 获取当前行的ID并赋值给全部变量。
+                FREEZE_ID = $(this).attr("userid");
+            });
+        }
+
+        function bindBtnConfirmFreezeEvent() {
+            $("#btnConfirmFreeze").click(function () {
+                $.ajax({
+                    url: "/admin/account/freeze/",
+                    type: "GET",
+                    data: {
+                        userid: FREEZE_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            location.reload();
+                        } else {
+                            // 冻结失败
+                            alert(res.error);
+                        }
+                    }
+                })
+            });
+        }
+
+
+        function bindBtnRecoverEvent() {
+            $(".btn-recover").click(function () {
+
+                var userid = $(this).attr("userid");
+                RECOVER_ID = userid;
+
+                $.ajax({
+                    url: "/admin/account/recover/",
+                    type: "GET",
+                    data: {
+                        userid: RECOVER_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            location.reload();
+                        } else {
+                            // 恢复失败
+                            alert(res.error);
+                        }
+                    }
+                })
+            });
+        }
+
+    </script>
+{% endblock %}
