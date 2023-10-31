@@ -51,17 +51,20 @@
                 </thead>
                 <tbody>
                 {% for obj in queryset %}
-                    <tr orderid="{{ obj.order_id }}">
-                        <th>{{ obj.order_id }}</th>
-                        <td>{{ obj.user }}</td>
-                        <td>{{ obj.get_complaint_category_display }}</td>
-                        <td class="truncate-cell">{{ obj.complaint_reason }}</td>
-                        <td>{{ obj.complaint_time }}</td>
-                        <td>
-                            <input orderid="{{ obj.order_id }}" type="button" class="btn btn-primary btn-xs btn-reply"
-                                   value="回复">
-                        </td>
-                    </tr>
+                    {% if obj.complaint_status == 1 %}
+                        <tr orderid="{{ obj.order_id }}">
+                            <th>{{ obj.order_id }}</th>
+                            <td>{{ obj.user }}</td>
+                            <td>{{ obj.get_complaint_category_display }}</td>
+                            <td class="truncate-cell">{{ obj.complaint_reason }}</td>
+                            <td>{{ obj.complaint_time }}</td>
+                            <td>
+                                <input orderid="{{ obj.order_id }}" type="button"
+                                       class="btn btn-primary btn-xs btn-reply"
+                                       value="回复">
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
 
                 </tbody>
@@ -99,7 +102,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">意见回复</label>
-                                    <textarea class="form-control" name="reply" rows="4" ></textarea>
+                                    <textarea class="form-control" name="reply" rows="4"></textarea>
                                 </div>
                             </div>
                         </div>

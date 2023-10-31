@@ -128,6 +128,14 @@ class ComplaintInfo(models.Model):
 
     complaint_reason = models.TextField(verbose_name='投诉理由', max_length=512)
 
+    complaint_choices = (
+        (1, "未回复"),
+        (2, "已回复"),
+    )
+
+    complaint_status = models.SmallIntegerField(verbose_name="投诉回复状态", choices=complaint_choices,
+                                                default=1)
+
 
 class HandlingOpinionInfo(models.Model):
     order = models.OneToOneField(verbose_name="订单id", to="OrderInfo", to_field="id",

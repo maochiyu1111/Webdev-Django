@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from SecondHand import models
 from SecondHand.utils.pagination import Pagination
 from SecondHand.utils.form import ItemModelForm
+from  SecondHand import  view_models
 
 
 def show_list(request):
@@ -17,7 +18,7 @@ def show_list(request):
     # 根据搜索条件去数据库获取
     queryset = models.ItemInfo.objects.filter(**data_dict)
     # 分页
-    page_object = Pagination(request, queryset, 3)
+    page_object = Pagination(request, queryset, 6)
     context = {
         "form": form,
         'queryset': page_object.page_queryset,
@@ -46,3 +47,22 @@ def show_detail(request):
     itemid = request.GET.get('itemid')
     item_object = models.ItemInfo.objects.filter(id=itemid).first()
     return render(request, 'item_detail.html', {"item_object": item_object})
+
+
+def show_favorite(request):
+    user_id = request.session["info"]["id"]
+    favorite_list = view_models.FavoriteView.objects.filter(user_id=user_id).all()
+    return render(request, "favorite_list.html", {"favorite_list": favorite_list})
+
+
+# 这个地方把增加和删除写到一起
+def add_favorite(request):
+    item_id = request.GET.get('itemid')
+    user_id = request.session["info"]["id"]
+    record = models.FavoriteInfo.objects.filter(item_id=item_id, user_id=user_id).first()
+    if not record:
+        models.FavoriteInfo.objects.create(item_id=item_id, user_id=user_id)
+    else:
+        # 删除该记录
+        record.delete()
+    return redirect("/item/favorite/list/")

@@ -1,0 +1,86 @@
+{% extends 'layout_user.html' %}
+
+{% block css %}
+    <style>
+        .item-description {
+            width: 250px;
+            color: #888888;
+        }
+
+        p {
+            margin: 0 0 5px;
+        }
+
+        /*去除a标签下划线*/
+        a {
+            text-decoration: none;
+        }
+
+        /*去除未被访问的a标签的下划线*/
+        a:link {
+            text-decoration: none;
+        }
+
+        /*去除已经被访问过的a标签的下划线*/
+        a:visited {
+            text-decoration: none;
+        }
+
+        /*去除鼠标悬停时的a标签的下划线*/
+        a:hover {
+            text-decoration: none;
+        }
+
+        /*去除正在点击的a标签的下划线（鼠标按下，尚未松开）*/
+        a:active {
+            text-decoration: none;
+        }
+
+        /*去除获得焦点的a标签的下划线（被鼠标点击过）*/
+        a:focus {
+            text-decoration: none;
+        }
+
+
+        .hover-effect {
+            border: 1px solid rgb(229, 229, 229);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .hover-effect:hover {
+            border-color: #cccccc;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+            -webkit-transform: translate3d(0, -2px, 0);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                收藏列表
+            </div>
+
+            <div class="row" style="padding: 10px 10px 10px 10px">
+                {% for item in favorite_list %}
+                    <div class=" col-xs-2 " style="margin-top: 20px">
+                        <div class="item_show text-center hover-effect" style="height: 250px">
+                            <div style="width: 100px; margin-top: 5px; margin-bottom: 5px" class="center-block">
+                                <a href="/item/detail/?itemid={{ item.item_id }}">
+                                    <img src="/media/{{ item.item_img }}" class="img-responsive"
+                                         alt="{{ item.item_name }}">
+                                </a>
+                            </div>
+                            <a href="/item/detail/?itemid={{ item.item_id }}">{{ item.item_name }}</a>
+                            <p>{{ item.price }}￥</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

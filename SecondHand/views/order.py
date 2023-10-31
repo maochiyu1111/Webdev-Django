@@ -65,8 +65,8 @@ def add_complaint(request):
                                             complaint_category=complaint_category)
 
         # 修改order表中的complaint_status一项
-        order_obj = models.OrderInfo.objects.filter(order_id=order_id).first()
-        order_obj.complaint_status = 2
+        order_obj = models.OrderInfo.objects.filter(id=order_id).first()
+        order_obj.order_complaint_status = 2
         order_obj.save()
 
         return JsonResponse({"status": True})

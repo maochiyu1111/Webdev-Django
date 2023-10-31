@@ -94,8 +94,8 @@ def reply_complaint(request):
         models.HandlingOpinionInfo.objects.create(manager_id=manager_id, order_id=order_id, opinion=reply)
 
         # 修改order表中的complaint_status一项，变成已回复
-        order_obj = models.OrderInfo.objects.filter(order_id=order_id).first()
-        order_obj.complaint_status = 3
+        order_obj = models.OrderInfo.objects.filter(id=order_id).first()
+        order_obj.order_complaint_status = 3
         order_obj.save()
 
         return JsonResponse({"status": True})

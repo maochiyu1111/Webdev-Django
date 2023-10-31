@@ -39,6 +39,8 @@ urlpatterns = [
     path('item/list/', item.show_list),
     path('item/add/', item.add),
     path('item/detail/', item.show_detail),
+    path('item/favorite/list/', item.show_favorite),
+    path('item/favorite/add/', item.add_favorite),
 
     # 订单部分
     path('order/add/', order.add),
