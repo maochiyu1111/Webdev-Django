@@ -8,7 +8,7 @@
 
 
 ---
-
+<div >
 <p align="center">
     <a href="https://docs.djangoproject.com/zh-hans/4.2/"><img src="https://img.shields.io/badge/Django-4.2.6-red.svg"></a>
     <a href="https://v3.bootcss.com/components/"><img src="https://img.shields.io/badge/bootstrap-3.4.1-blue.svg"></a>
@@ -16,6 +16,9 @@
     <a href="https://github.com/maochiyu1111/Webdev-Django/blob/PerfumeEncore/LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg
 "></a> 
 </p>
+<div/>
+
+
 
 # Perfume Encore
 
