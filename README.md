@@ -1,10 +1,11 @@
 
 
 <div align="center">
-<h3 >PerfumeEncore<h3/> 
-<h5>一个没人用的香氛转让网站</h5>
+<p style="font-size: 22px; font-weight:800;">PerfumeEncore<p/> 
+<p style="font-size: 18px; font-weight:600;">一个没人用的香氛转让网站</p>
 <img  src="assets/logo.png" alt="logo" width="30%" />
 <div/>
+
 
 ---
 
@@ -16,7 +17,7 @@
 "></a> 
 </p>
 
-# <p align="center">Perfume Encore</p>
+# Perfume Encore
 
 HITSZ 数据库课程实验项目，要求为校园二手物品转让平台，因个人喜好略作修改。
 
