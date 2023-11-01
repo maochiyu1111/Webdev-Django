@@ -195,6 +195,11 @@
                             // 关闭对话框
                             $('#myModal').modal('hide');
 
+                            // 延时0.2秒后跳转到重新加载
+                            setTimeout(function () {
+                                location.reload();
+                            }, 200);
+
                         } else {
                             // 把错误信息显示在对话框中。
                             $.each(res.error, function (name, errorList) {
