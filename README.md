@@ -1,10 +1,10 @@
 
 
 <div align="center">
-<p style="font-size: 22px; font-weight:800;">PerfumeEncore<p/> 
+<p style="font-size: 22px; font-weight:800;">PerfumeEncore</p> 
 <p style="font-size: 18px; font-weight:600;">一个没人用的香氛转让网站</p>
 <img  src="assets/logo.png" alt="logo" width="30%" />
-<div/>
+</div>
 
 
 ---
@@ -16,7 +16,7 @@
     <a href="https://github.com/maochiyu1111/Webdev-Django/blob/PerfumeEncore/LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg
 "></a> 
 </p>
-<div/>
+</div>
 
 
 
@@ -46,7 +46,7 @@ HITSZ 数据库课程实验项目，要求为校园二手物品转让平台，�
 
 <div align="center">
 <img  src="assets/function.png" alt="功能示意图" width="60%" />
-<div/>
+</div>
 
 
 ## Django简述:star:
@@ -168,42 +168,42 @@ Django是一个流行的Python Web框架，在项目中Django可以简化对数�
 
 <div align="center" >
 <img src="assets/register_login.png" alt="登录注册示意图" width="80%"/>
-<div/>
+</div>
 
 
 2. 用户登录后跳转到物品展示页面，即导航栏的“逛逛”，导航栏的“购物车”、“我的收藏”、“我的订单”页面如下
 
 <div align="center" >
 <img src="assets/nav-show.png" alt="导航栏示意图" width="80%"/>
-<div/>
+</div>
 
 
 3. 物品展示页面中，用户点击“我要转让”可以添加需要转让出的物品，使用右侧搜索栏可检索相关物品
 
 <div align="center" >
 <img src="assets/item-list.png" alt="物品展示页面" width="80%"/>
-<div/>
+</div>
 
 
 4. 在物品展示页面、收藏夹、购物车中点击物品图片或名称皆可跳转到物品详情页面，物品详情页面中可对该物品进行下单、收藏、加入购物车等操作。右图为下单页面，点击已支付后会产生订单
 
 <div align="center" >
 <img src="assets/item-detail.png" alt="物品详情页面" width="80%"/>
-<div/>
+</div>
 
 
 5. 物品收藏页面无其余操作，再次点击加入收藏可取消对该物品的收藏。购物车页面可勾选一定数量物品，右侧栏会显示总金额。点击已支付会对勾选的所有物品产生订单。
 
 <div align="center" >
 <img src="assets/shoppingcart.png" alt="购物车页面" width="80%"/>
-<div/>
+</div>
 
 
 6. 订单页面中，每个订单都可以将取消或查看物品的操作。根据不同订单投诉情况的不同状态，如果没有进行投诉，即可进行投诉操作，若得到管理员回复则可查看回复
 
 <div align="center" >
 <img src="assets/order.png" alt="订单页面" width="80%"/>
-<div/>
+</div>
 
 
 ### 管理端 
@@ -212,7 +212,7 @@ Django是一个流行的Python Web框架，在项目中Django可以简化对数�
 
 <div align="center" >
 <img src="assets/admin_account.png" alt="账号管理" width="80%"/>
-<div/>
+</div>
 
 
 
@@ -220,14 +220,14 @@ Django是一个流行的Python Web框架，在项目中Django可以简化对数�
 
 <div align="center" >
 <img src="assets/admin_item.png" alt="物品管理" width="80%"/>
-<div/>
+</div>
 
 
 3. 对投诉进行处理，可以回复投诉。只显示未被回复的投诉
 
 <div align="center" >
 <img src="assets/admin_complaint.png" alt="投诉处理" width="80%"/>
-<div/>
+</div>
 
 
 
