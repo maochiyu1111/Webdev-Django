@@ -66,3 +66,22 @@ def add_favorite(request):
         # 删除该记录
         record.delete()
     return redirect("/item/favorite/list/")
+
+
+def show_shoppingcart(request):
+    user_id = request.session["info"]["id"]
+    shoppingcart_list = view_models.ShoppingcartView.objects.filter(user_id=user_id).all()
+    return render(request, "shoppingcart_list.html", {"shoppingcart_list": shoppingcart_list})
+
+
+# 这个地方把增加和删除写到一起
+def add_shoppingcart(request):
+    item_id = request.GET.get('itemid')
+    user_id = request.session["info"]["id"]
+    record = models.ShoppingCartInfo.objects.filter(item_id=item_id, user_id=user_id).first()
+    if not record:
+        models.ShoppingCartInfo.objects.create(item_id=item_id, user_id=user_id)
+    else:
+        # 删除该记录
+        record.delete()
+    return redirect("/item/shoppingcart/list/")

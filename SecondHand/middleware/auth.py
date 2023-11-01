@@ -7,7 +7,8 @@ class AuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         # 排除那些不需要登录就能访问的页面
         path_exclude = ["/login/", "/register/", "/index/"]
-        path_user = ["/item/list/", "/item/detail/", "/order/list/", "/order/item/"]
+        path_user = ["/item/list/", "/item/detail/", "/order/list/", "/order/item/", "/item/shoppingcart/list/",
+                     "/item/favorite/list/"]
         path_manager = ["/admin/item/manage/", "/admin/complaint/list/", "/admin/account/manage/"]
         if request.path_info in path_exclude:
             return

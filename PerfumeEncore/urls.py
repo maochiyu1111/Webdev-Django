@@ -41,6 +41,8 @@ urlpatterns = [
     path('item/detail/', item.show_detail),
     path('item/favorite/list/', item.show_favorite),
     path('item/favorite/add/', item.add_favorite),
+    path('item/shoppingcart/list/', item.show_shoppingcart),
+    path('item/shoppingcart/add/', item.add_shoppingcart),
 
     # 订单部分
     path('order/add/', order.add),

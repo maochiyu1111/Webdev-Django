@@ -1,0 +1,278 @@
+{% extends 'layout_user.html' %}
+{% load static %}
+
+{% block css %}
+    <style>
+        .item-description {
+            width: 250px;
+            color: #888888;
+        }
+
+        p {
+            margin: 0 0 5px;
+        }
+
+        /*去除a标签下划线*/
+        a {
+            text-decoration: none;
+        }
+
+        /*去除未被访问的a标签的下划线*/
+        a:link {
+            text-decoration: none;
+        }
+
+        /*去除已经被访问过的a标签的下划线*/
+        a:visited {
+            text-decoration: none;
+        }
+
+        /*去除鼠标悬停时的a标签的下划线*/
+        a:hover {
+            text-decoration: none;
+        }
+
+        /*去除正在点击的a标签的下划线（鼠标按下，尚未松开）*/
+        a:active {
+            text-decoration: none;
+        }
+
+        /*去除获得焦点的a标签的下划线（被鼠标点击过）*/
+        a:focus {
+            text-decoration: none;
+        }
+
+
+        .hover-effect {
+            border: 1px solid rgb(229, 229, 229);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .hover-effect:hover {
+            border-color: #cccccc;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+            -webkit-transform: translate3d(0, -2px, 0);
+        }
+
+        .checkbox {
+            position: relative;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        #shop-list {
+            float: right;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="panel panel-default col-xs-9">
+
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                购物车列表
+            </div>
+
+            <div class="row" style="padding: 10px 10px 10px 10px">
+                {% for item in shoppingcart_list %}
+                    <div class=" col-xs-3 " style="margin-top: 20px">
+                        <div class="checkbox">
+                            <label>
+                                <input class="check-shop" itemid="{{ item.item_id }}" name="{{ item.item_name }}"
+                                       price="{{ item.price }}" type="checkbox">
+                            </label>
+                        </div>
+                        <div class="item_show text-center hover-effect" style="height: 250px">
+                            <div style="width: 100px; margin-top: 5px; margin-bottom: 5px" class="center-block">
+                                <a href="/item/detail/?itemid={{ item.item_id }}">
+                                    <img src="/media/{{ item.item_img }}" class="img-responsive"
+                                         alt="{{ item.item_name }}">
+                                </a>
+                            </div>
+                            <a href="/item/detail/?itemid={{ item.item_id }}">{{ item.item_name }}</a>
+                            <p>{{ item.price }}￥</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="shop-list" class="panel panel-default col-xs-2">
+            <table class="table text-center">
+                <caption class="text-center">下单列表</caption>
+                <thead>
+                <tr>
+                    <th class="text-center">物品名</th>
+                    <th class="text-center">价格</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>总金额：</td>
+                    <td>0￥</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button id="btnAddOrder" class="center-block btn btn-success"
+                    style="margin-top: 10px; margin-bottom: 10px;">下单
+            </button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">订单-模拟支付</h4>
+                </div>
+                <div class="modal-body">
+                    <img class="img-responsive center-block" alt="付款码" src="{% static 'img/打钱.png' %}"
+                         style="width: 60%">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">已支付</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // 创建一个空数组来保存被勾选的数据
+        var selectedItems = [];
+
+        $(function () {
+            shopListEvent();
+            bindBtnAddEvent();
+            bindBtnSaveEvent();
+        })
+
+        function shopListEvent() {
+            // 监听所有的复选框的变化
+            $('.check-shop').change(function () {
+                // 清空数组
+                selectedItems = [];
+
+                // 遍历每个复选框
+                $('.check-shop').each(function () {
+                    // 如果复选框被勾选
+                    if ($(this).is(':checked')) {
+                        // 获取itemid和name属性的值
+                        var itemId = $(this).attr('itemid');
+                        var itemName = $(this).attr('name');
+                        var itemPrice = $(this).attr('price');
+
+                        // 创建一个对象来保存itemid和name的值
+                        var item = {
+                            itemId: itemId,
+                            itemName: itemName,
+                            itemPrice: itemPrice
+                        };
+
+                        // 将对象添加到数组中
+                        selectedItems.push(item);
+                    }
+                });
+
+                // 清空下单列表
+                $('#shop-list tbody').empty();
+
+                // 遍历每个被勾选的项
+                selectedItems.forEach(function (item) {
+                    // 创建一个新的表行
+                    var newRow = $('<tr>').attr('itemid', item.itemId);
+
+                    // 创建物品名表格单元格并添加到表行中
+                    var nameCell = $('<td>').text(item.itemName);
+                    newRow.append(nameCell);
+
+                    // 创建价格表格单元格并添加到表行中
+                    var priceCell = $('<td>').text(item.itemPrice);
+                    newRow.append(priceCell);
+
+                    // 将表行添加到下单列表中
+                    $('#shop-list tbody').append(newRow);
+                });
+
+                // 计算总金额
+                var totalPrice = 0;
+                selectedItems.forEach(function (item) {
+                    totalPrice += parseFloat(item.itemPrice);
+                });
+
+                // 创建总金额的表行
+                var totalRow = $('<tr>');
+                var totalLabelCell = $('<td>').text('总金额：');
+                var totalPriceCell = $('<td>').text(totalPrice.toFixed(2) + '￥'); // 保留两位小数
+                totalRow.append(totalLabelCell, totalPriceCell);
+
+                // 将总金额的表行添加到下单列表中
+                $('#shop-list tbody').append(totalRow);
+
+
+            });
+        }
+
+        function bindBtnAddEvent() {
+            $("#btnAddOrder").click(function () {
+
+                // 点击新建按钮，显示对话框。
+                $('#myModal').modal('show');
+            });
+        }
+
+        function bindBtnSaveEvent() {
+            $("#btnSave").click(function () {
+                selectedItems.forEach(function (item) {
+                    var ITEM_ID = item.itemId;
+                    var AMOUNT = item.itemPrice;
+                    var ITEM_NAME = item.itemName;
+
+                    $.ajax({
+                        url: "/order/add/",
+                        type: "GET",
+                        data: {
+                            item_id: ITEM_ID,
+                            item_name: ITEM_NAME,
+                            amount: AMOUNT,
+                        },
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+
+                            } else {
+                                alert("创建订单失败");
+                            }
+                        },
+                    });
+                });
+
+                //所有请求发完了
+                // 关闭对话框
+                $('#myModal').modal('hide');
+
+                // 延时0.2秒后跳转到/order/list/
+                setTimeout(function () {
+                    window.location.href = '/order/list/';
+                }, 200);
+            });
+        }
+    </script>
+{% endblock %}
